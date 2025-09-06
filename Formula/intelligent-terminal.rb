@@ -14,10 +14,19 @@ class IntelligentTerminal < Formula
 
   def install
     venv = virtualenv_create(libexec, "python3.11")
-    # Homebrew creates the venv without pip on Tier-2 setups; bootstrap pip offline.
+
+    # On Tier-2 macOS, venv may be created without pip; bootstrap it offline.
     system libexec/"bin/python", "-m", "ensurepip", "--upgrade"
-    # Install the wheel from Homebrew's cached download without touching network.
-    system libexec/"bin/python", "-m", "pip", "install", "--no-index", cached_download
+
+    # Homebrew caches the download with a hash-prefixed filename that pip rejects.
+    # Copy it to a clean, valid wheel filename (use the URL's basename).
+    wheel_name = File.basename(stable.url) # => intelligent_terminal-0.1.0-py3-none-any.whl
+    wheel_path = buildpath/wheel_name
+    cp cached_download, wheel_path
+
+    # Install the wheel from the venv without touching the network.
+    system libexec/"bin/python", "-m", "pip", "install", "--no-index", wheel_path
+
     # Expose the console entry point
     bin.install_symlink libexec/"bin/intelligent-terminal"
   end
