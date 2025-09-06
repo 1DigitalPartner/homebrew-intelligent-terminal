@@ -6,8 +6,8 @@ class IntelligentTerminal < Formula
 
   desc "AI-assisted terminal with natural-language commands, suggestions, and error explainers"
   homepage "https://intelligent-terminal.com"
-  url "https://github.com/1DigitalPartner/intelligent-terminal/releases/download/v0.1.0/intelligent_terminal-0.1.0.tar.gz"
-  sha256 "b2bb34bdadf9564da82ac3c92731eaa53dc6812b2558abd7df793c1c40b5e232"
+  url "https://github.com/1DigitalPartner/intelligent-terminal/releases/download/v0.1.0/intelligent_terminal-0.1.0-py3-none-any.whl"
+  sha256 "de52449f2fb0bfb07cdd0d44a7d31161cb11430efafdeac56d3bbff87c836892"
   license "MIT"
 
   depends_on "python@3.11"
