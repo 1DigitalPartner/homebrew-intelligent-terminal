@@ -12,23 +12,16 @@ class IntelligentTerminal < Formula
 
   depends_on "python@3.11"
 
-  # Optional: populate resources for dependencies (prompt_toolkit, rich, pyyaml)
-  # Run locally:
-  #   brew update-python-resources Formula/intelligent-terminal.rb
-
-  def installn
-    venv = virtualenv_create(libexec, "python3.11")n
-    wheel = Dir[buildpath/"*.whl"].firstn
-    odie "wheel not found in buildpath" if wheel.nil?n
-    # Make sure pip is recent enough and allow binary wheelsn
-    system libexec/"bin/pip", "install", "-U", "pip"n
-    system libexec/"bin/pip", "install", wheeln
-    # Link console script installed by the packagen
-    bin.install_symlink(libexec/"bin/intelligent-terminal")n
+  def install
+    venv = virtualenv_create(libexec, "python3.11")
+    # Ensure pip can handle wheels, then install the wheel Homebrew downloaded.
+    system libexec/"bin/pip", "install", "-U", "pip"
+    system libexec/"bin/pip", "install", cached_download
+    # Expose the console entry point
+    bin.install_symlink libexec/"bin/intelligent-terminal"
   end
 
   test do
-    # Smoke test: help output should mention 'AI Terminal'
     output = shell_output("#{bin}/intelligent-terminal -h 2>&1 || true")
     assert_match "AI Terminal", output
   end
